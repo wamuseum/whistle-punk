@@ -4,7 +4,7 @@
   "description": "OAK launcher that handles and logs errors.",
   "main": "index.js",
   "scripts": {
-    "start": "node_modules/.bin/oak ./index.js",
+    "start": "node_modules/.bin/oak -d true -n true ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +17,7 @@
     "config": "^3.3.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "js-yaml": "^3.14.0",
     "wait-on": "^5.2.0"
   },
   "devDependencies": {
