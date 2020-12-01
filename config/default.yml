@@ -1,0 +1,18 @@
+sslexceptions:
+  - 'localhost'
+  - '*.local'
+windows:
+  - display: 2
+    url: './index.html'
+    background: '#ffffff'
+    ontop: false
+    insecure: false
+    kiosk: false
+    fullscreen: false
+#  - display: 1
+#    url: 'https://museum.wa.gov.au/'
+#    background: '#ffffff'
+#    ontop: false
+#    insecure: false
+#    kiosk: false
+#    fullscreen: false

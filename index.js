@@ -1,54 +1,45 @@
+const { join } = require('path')
 const oak = require('oak')
 const waitOn = require('wait-on')
 const express = require('express')
+const config = require('config')
 
 require('dotenv').config()
+oakWindows = config.get('windows')
+oakObjects = []
 
-function loadWindow () {
-
-  let exceptions = ['localhost']
+function loadWindows () {
+  let sslExceptions = config.get('sslexceptions')
   let displays = oak.getDisplays()
-  let display = parseInt(process.env.DISPLAY_ID) || 2
-  let url = process.env.REMOTE_URL || 'https://museum.wa.gov.au/'
-  let background = process.env.BACKGROUND_COLOR || '#ffffff'
-  let ontop = Boolean(process.env.WINDOW_ONTOP) || false
-  let insecure = Boolean(process.env.WINDOW_INSECURE)  || false
-  let kiosk = Boolean(process.env.KIOSK) || false
-  let fullscreen = Boolean(process.env.FULLSCREEN) || false
+  //let errors = oak.catchErrors()
+  //let log = oak.log
 
   //console.log("Displays: ",JSON.stringify(displays))
+  oakWindows.forEach(function(oakWindow, index){
+    let opts = {
+      ...oakWindow,
+      size: displays[oakWindow.display].workArea.width + "x" + displays[oakWindow.display].workArea.height,
+      x: displays[oakWindow.display].workArea.x,
+      y: displays[oakWindow.display].workArea.y,
+      sslExceptions:  sslExceptions
+    }
 
-  let opts = {
-    url,
-    background,
-    display,
-    ontop,
-    size: displays[display].workArea.width + "x" + displays[display].workArea.height,
-    x: displays[display].workArea.x,
-    y: displays[display].workArea.y,
-    sslExceptions:  exceptions,
-    insecure,
-    kiosk,
-    fullscreen
-  }
-  if (opts.fullscreen) {
-    delete opts.size
-  }
-
-  // let opts = process.env
-  if (process.env.SSL_EXCEPTIONS) {
-    opts.sslExceptions = process.env.SSL_EXCEPTIONS.split(';')
-  }
-
-  console.log("Options: ", opts)
-
-  oak.load(opts)
-
+    opts.url = opts.url.startsWith("http") ? opts.url : 'file://' + join(__dirname,opts.url)
+    if (opts.fullscreen) {
+      delete opts.size
+    }
+    //console.log("Options: ", opts)
+    oakObjects[index] = oak.load(opts)
+    oakObjects[index].on('unresponsive', function(event) {
+      console.log(event)
+      this.reload()
+    })
+  })
 }
 
 // everything has to wait for the main ready event to fire
 oak.on('ready', () => {
-  let waitFor = [process.env.REMOTE_URL || 'https://museum.wa.gov.au/'];
+  let waitFor = oakWindows.map(value => value.url.startsWith("http") ? value.url : join(__dirname,value.url))
   if (process.env.WAIT_ON) {
     waitFor = process.env.WAIT_ON.split(";")
   }
@@ -59,7 +50,6 @@ oak.on('ready', () => {
   waitOn(opts, function (err) {
     if (err) { return handleError(err); }
     // once here, all resources are available
-    loadWindow()
+    loadWindows()
   });
-
 })
