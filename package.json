@@ -1,0 +1,25 @@
+{
+  "name": "whistle-punk",
+  "version": "1.0.0",
+  "description": "OAK launcher that handles and logs errors.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node_modules/.bin/oak ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://code.wam.fyi/wamuseum/whistle-punk.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.3",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "wait-on": "^5.2.0"
+  },
+  "devDependencies": {
+    "oak": "^5.0.9"
+  }
+}
