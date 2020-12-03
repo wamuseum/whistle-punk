@@ -2,13 +2,16 @@ sslexceptions:
   - 'localhost'
   - '*.local'
 windows:
-  - display: 2
+  - display: 0
     url: './index.html'
     background: '#ffffff'
     ontop: false
     insecure: false
     kiosk: false
     fullscreen: false
+    size: '500x500'
+    x: '50'
+    y: '50'
 #  - display: 1
 #    url: 'https://museum.wa.gov.au/'
 #    background: '#ffffff'

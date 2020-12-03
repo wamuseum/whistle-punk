@@ -18,9 +18,9 @@ function loadWindows () {
   oakWindows.forEach(function(oakWindow, index){
     let opts = {
       ...oakWindow,
-      size: displays[oakWindow.display].workArea.width + "x" + displays[oakWindow.display].workArea.height,
-      x: displays[oakWindow.display].workArea.x,
-      y: displays[oakWindow.display].workArea.y,
+      //size: displays[oakWindow.display].workArea.width + "x" + displays[oakWindow.display].workArea.height,
+      //x: displays[oakWindow.display].workArea.x,
+      //y: displays[oakWindow.display].workArea.y,
       sslExceptions:  sslExceptions
     }
 
@@ -31,7 +31,6 @@ function loadWindows () {
     //console.log("Options: ", opts)
     oakObjects[index] = oak.load(opts)
     oakObjects[index].on('unresponsive', function(event) {
-      console.log(event)
       this.reload()
     })
   })
