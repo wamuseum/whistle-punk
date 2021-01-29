@@ -13,23 +13,28 @@ if (! (oakWindows = config.has('windows') ? config.windows : false)) {
 oakObjects = []
 
 function loadWindows () {
-  let sslExceptions = config.get('sslexceptions')
   let displays = oak.getDisplays()
 
-  oakWindows.forEach(function(oakWindow, index){
-    let opts = {
-      ...oakWindow,
-      x: displays[oakWindow.display].workArea.x,
-      y: displays[oakWindow.display].workArea.y,
-      sslExceptions:  sslExceptions
+  oakWindows.forEach(function(oakWindow, index) {
+    oakWindow.x =  displays[oakWindow.display].workArea.x + oakWindow.x
+    oakWindow.y = displays[oakWindow.display].workArea.y + oakWindow.y
+    if (oakWindow.fullscreen) {
+      delete oakWindow.size
+      delete oakWindow.x
+      delete oakWindow.y
     }
-    if (opts.fullscreen) {
-      delete opts.size
+    if (config.has('sslexceptions')) {
+      oakWindow.sslExceptions = config.sslexceptions
     }
-    oakObjects[index] = oak.load(opts)
+
+    oakObjects[index] = oak.load(oakWindow)
     oakObjects[index].on('unresponsive', function(event) {
       console.log('page has become unresponsive')
       this.location(this.opts.url)
+    })
+    oakObjects[index].on('loadFailed', function(event) {
+      console.log('page failed to load')
+      // this.location(this.opts.url)
     })
   })
 
