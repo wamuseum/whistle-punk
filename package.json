@@ -21,6 +21,6 @@
     "wait-on": "^5.2.0"
   },
   "devDependencies": {
-    "oak": "^5.0.9"
+    "oak": "^7.0.0"
   }
 }
