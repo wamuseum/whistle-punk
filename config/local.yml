@@ -1,6 +1,7 @@
 windows:
-  - display: 2
+  - display: 1
     url: './index.html'
+    title: 'OAK'
     background: '#ffffff'
     ontop: false
     insecure: false
@@ -10,5 +11,8 @@ windows:
     size: '500x500'
     x: 50
     y: 50
+    node: true
     flags:
-      - '--ignore-gpu-blacklist'
+      - 'ignore-gpu-blacklist'
+#    scripts:
+#      - '/home/andrew/projects/work/whistle-punk/hide-cursor.js'
