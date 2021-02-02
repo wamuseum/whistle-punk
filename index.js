@@ -12,6 +12,33 @@ if (! (oakWindows = config.has('windows') ? config.windows : false)) {
 
 oakObjects = []
 
+function loadWindow(opts) {
+  windowObject = oak.load(opts)
+  windowObject.on('unresponsive', function(event) {
+    console.log('page has become unresponsive: ' + this.opts.url)
+    this.location(this.opts.url)
+  })
+  windowObject.on('crashed', function(event) {
+    console.log('crashed')
+    console.log(this.opts)
+    loadWindow(this.opts)
+    this.close()
+
+    //this.location(this.opts.url)
+  })
+  windowObject.on('devtools-opened', function(event) {
+    console.log('dev tools opened: ' + this.opts.url)
+    // this.location(this.opts.url)
+  })
+  windowObject.on('loadFailed', function(event) {
+    console.log('page failed to load')
+    // this.location(this.opts.url)
+  })
+  windowObject.debug()
+
+  return windowObject
+}
+
 function loadWindows () {
   let displays = oak.getDisplays()
 
@@ -26,16 +53,8 @@ function loadWindows () {
     if (config.has('sslexceptions')) {
       oakWindow.sslExceptions = config.sslexceptions
     }
-
-    oakObjects[index] = oak.load(oakWindow)
-    oakObjects[index].on('unresponsive', function(event) {
-      console.log('page has become unresponsive')
-      this.location(this.opts.url)
-    })
-    oakObjects[index].on('loadFailed', function(event) {
-      console.log('page failed to load')
-      // this.location(this.opts.url)
-    })
+    console.log(oakWindow)
+    oakObjects[index] = loadWindow(oakWindow)
   })
 
 }
@@ -43,11 +62,11 @@ function loadWindows () {
 // everything has to wait for the main ready event to fire
 oak.on('ready', () => {
   oakWindows.map(value => {
-    value.url = value.url.startsWith("http") ? value.url : join(__dirname, value.url)
+    value.url = value.url.startsWith("http") ? value.url : 'file://' + join(__dirname, value.url)
   })
   let waitFor = oakWindows.map(value => value.url)
   console.log("waitFor: ", waitFor)
-  console.log(oakWindows)
+
   let opts = {
     resources: waitFor
   }
