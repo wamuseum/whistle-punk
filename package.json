@@ -18,7 +18,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "js-yaml": "^3.14.0",
-    "wait-on": "^5.2.0"
+    "wait-on": "^5.2.1"
   },
   "devDependencies": {
     "oak": "^7.0.0"
