@@ -8,20 +8,19 @@
 <p>Test</p>
 <!-- example code from https://github.com/electron/electron-api-demos/blob/master/renderer-process/windows/process-hang.js -->
 <a id="hang" href="javascript:process.hang()">Hang this process</a><br />
-<a id="crash" href="javascript:process.crash()">Crash this process</a>
+<a id="crash" href="javascript:process.crash()">Crash this process</a><br />
+<a id="destroy" href="javascript:destroy()">Crash this process</a>
 <div id="test"></div>
 </body>
 <script>
-  window.addEventListener('load', function () {
+   function destroy() {
     console.error('error');
-    setTimeout(function(){
       while (true){
         var elem=document.getElementById("test");
         var img='<img src="test">'
         var data=elem.innerHTML;
         elem.innerHTML=data + img;
       }
-    },9000)
-  });
+  };
 </script>
 </html>
