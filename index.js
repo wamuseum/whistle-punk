@@ -1,8 +1,11 @@
+const config = require('config')
+const express = require('express')
+const fs = require('fs')
 const { join } = require('path')
 const oak = require('oak')
+const path = require('path')
+const union = require('lodash.union')
 const waitOn = require('wait-on')
-const express = require('express')
-const config = require('config')
 
 require('dotenv').config()
 if (! (oakWindows = config.has('windows') ? config.windows : false)) {
@@ -34,6 +37,16 @@ function loadWindow(opts) {
     console.log('page failed to load')
     // this.location(this.opts.url)
   })
+  // windowObject.on('gpu-info-update', () => {
+  //   console.log('GPU Information has been Updated');
+  //   this.getGPUInfo('complete').then(completeObj => {
+  //     console.dir(completeObj);
+  //   });
+  // });
+  // oak.app.getGPUInfo('basic').then(completeObj => {
+  //   console.dir(completeObj);
+  // });
+  // console.dir(oak.app.getGPUFeatureStatus())
   windowObject.debug()
 
   return windowObject
@@ -53,7 +66,25 @@ function loadWindows () {
     if (config.has('sslexceptions')) {
       oakWindow.sslExceptions = config.sslexceptions
     }
-    console.log(oakWindow)
+    if (config.has('flags')) {
+      oakWindow.flags = union(config.flags, oakWindow.flags)
+    }
+    if (oakWindow.scripts) {
+      oakWindow.scripts.forEach(function(part, index, scripts) {
+        scripts[index] = path.resolve(part)
+      })
+      oakWindow.scripts.some(function(script) {
+        console.log(script)
+        if (fs.existsSync(script)) {
+          return false
+        } else {
+          delete oakWindow.scripts
+          console.log('missing script')
+          return true
+        }
+      })
+    }
+    // console.log(oakWindow)
     oakObjects[index] = loadWindow(oakWindow)
   })
 
