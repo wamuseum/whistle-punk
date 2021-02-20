@@ -1,8 +1,8 @@
 const config = require('config')
 const express = require('express')
 const fs = require('fs')
-const { join } = require('path')
 const oak = require('oak')
+const os = require('os')
 const path = require('path')
 const union = require('lodash.union')
 const waitOn = require('wait-on')
@@ -23,7 +23,7 @@ function loadWindow(opts) {
   })
   windowObject.on('crashed', function(event) {
     console.log('crashed')
-    console.log(this.opts)
+    // console.log(this.opts)
     loadWindow(this.opts)
     this.close()
 
@@ -74,7 +74,6 @@ function loadWindows () {
         scripts[index] = path.resolve(part)
       })
       oakWindow.scripts.some(function(script) {
-        console.log(script)
         if (fs.existsSync(script)) {
           return false
         } else {
@@ -84,7 +83,6 @@ function loadWindows () {
         }
       })
     }
-    // console.log(oakWindow)
     oakObjects[index] = loadWindow(oakWindow)
   })
 
@@ -92,8 +90,9 @@ function loadWindows () {
 
 // everything has to wait for the main ready event to fire
 oak.on('ready', () => {
+  let filePrefix = os.platform() == 'win32' ? '' : 'file://'
   oakWindows.map(value => {
-    value.url = value.url.startsWith("http") ? value.url : 'file://' + join(__dirname, value.url)
+    value.url = value.url.startsWith("http") ? value.url :  filePrefix + path.join(__dirname, value.url)
   })
   let waitFor = oakWindows.map(value => value.url)
   console.log("waitFor: ", waitFor)
