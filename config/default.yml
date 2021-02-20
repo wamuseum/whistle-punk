@@ -23,3 +23,18 @@ windows:
     node: true
     scripts:
       - 'hide-cursor.js'
+  - display: 0
+    url: './index.html'
+    title: 'OAK'
+    background: '#ffffff'
+    ontop: false
+    insecure: false
+    kiosk: false
+    fullscreen: false
+    frame: true
+    size: '1024x500'
+    x: 100
+    y: 100
+    node: true
+#    scripts:
+#      - 'hide-cursor.js'
