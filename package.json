@@ -4,7 +4,7 @@
   "description": "OAK launcher that handles and logs errors.",
   "main": "index.js",
   "scripts": {
-    "start": "node_modules/.bin/oak -n true ./index.js",
+    "start": "node_modules/.bin/oak -n true --autoplay-policy=no-user-gesture-required ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
