@@ -15,6 +15,7 @@ Sounds a bit like someone who keeps an eye on things...
 - x86 and rpi but currently only actively tested on x86.  
 - Allows multiple windows to be open across all local displays.
     - Window size and other attributes can be individually configured.
+- Waits for all listed URLs to become available before opening them. Useful if you need to wait for a local web sever to startup before launching.
 - If the loaded web pages crash or become unresponsive, Whistle Punk will attempt to recover by reloading the page or killing and reopening the window.
 - Arbitrary scripts can be injected into the windows. An example is included to hide the cursor for touch based kiosks where the source page does not and cannot have that feature added.
 - Takes configuration from yaml files using https://www.npmjs.com/package/config.
