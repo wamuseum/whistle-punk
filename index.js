@@ -1,5 +1,6 @@
 const config = require('config')
 const fs = require('fs')
+const merge = require('lodash.merge')
 const oak = require('oak')
 const os = require('os')
 const path = require('path')
@@ -47,6 +48,9 @@ function loadWindows () {
     }
     if (config.has('flags')) {
       oakWindow.flags = union(config.flags, oakWindow.flags)
+    }
+    if (config.has('shortcut')) {
+      oakWindow.shortcut = merge(config.shortcut, oakWindow.shortcut)
     }
     if (oakWindow.scripts) {
       // check that all injected scripts exits and remove them all if any are not found
