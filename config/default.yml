@@ -5,6 +5,9 @@ flags:
   - 'ignore-gpu-blacklist'
   - 'enable-native-gpu-memory-buffers'
   - 'enable-gpu-rasterization'
+shortcut:
+  reload: false
+  quit: false
 windows:
   - display: 0
     url: './index.html'
@@ -19,5 +22,5 @@ windows:
     x: 50
     y: 50
     node: true
-#    scripts:
-#      - 'hide-cursor.js'
+    scripts:
+      - 'hide-cursor.js'
