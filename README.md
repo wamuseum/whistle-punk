@@ -3,7 +3,7 @@
 This is a generic launcher for HTML based interactive screens or kiosks.
 
 We use electron via oak (https://www.npmjs.com/package/oak) for our HTML based Gallery screens, so we thought it would be appropriate
-to go with a tree/forrest/lubberjack theme, hence Whistle Punk:
+to go with a tree/forrest/lumberjack theme, hence Whistle Punk:
 
 > a lumberjack who operates the signal wire running to a donkey engine whistle
 
