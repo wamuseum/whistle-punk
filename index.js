@@ -17,7 +17,7 @@ function loadWindow(opts) {
   let windowObject = oak.load(opts)
   windowObject.on('unresponsive', function(event) {
     console.log('page has become unresponsive: ' + this.opts.url)
-    this.location(this.opts.url)
+    this.loadPage()
   })
   windowObject.on('crashed', function(event) {
     console.log('crashed')
@@ -26,7 +26,7 @@ function loadWindow(opts) {
   })
   windowObject.on('loadFailed', function(event) {
     console.log('page failed to load')
-    this.location(this.opts.url)
+    this.loadPage()
   })
   return windowObject
 }
@@ -65,6 +65,7 @@ function loadWindows () {
     }
     oakObjects[index] = loadWindow(oakWindow)
   })
+  console.dir(oak.app.getGPUFeatureStatus())
 }
 
 oak.on('ready', () => {
