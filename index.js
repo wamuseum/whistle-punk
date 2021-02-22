@@ -1,5 +1,4 @@
 const config = require('config')
-const express = require('express')
 const fs = require('fs')
 const oak = require('oak')
 const os = require('os')
@@ -7,48 +6,28 @@ const path = require('path')
 const union = require('lodash.union')
 const waitOn = require('wait-on')
 
-require('dotenv').config()
 if (! (oakWindows = config.has('windows') ? config.windows : false)) {
   console.log('Error loading oakWindows config')
   process.exit(1)
 }
 
-oakObjects = []
+let oakObjects = []
 
 function loadWindow(opts) {
-  windowObject = oak.load(opts)
+  let windowObject = oak.load(opts)
   windowObject.on('unresponsive', function(event) {
     console.log('page has become unresponsive: ' + this.opts.url)
     this.location(this.opts.url)
   })
   windowObject.on('crashed', function(event) {
     console.log('crashed')
-    // console.log(this.opts)
     loadWindow(this.opts)
     this.close()
-
-    //this.location(this.opts.url)
-  })
-  windowObject.on('devtools-opened', function(event) {
-    console.log('dev tools opened: ' + this.opts.url)
-    // this.location(this.opts.url)
   })
   windowObject.on('loadFailed', function(event) {
     console.log('page failed to load')
-    // this.location(this.opts.url)
+    this.location(this.opts.url)
   })
-  // windowObject.on('gpu-info-update', () => {
-  //   console.log('GPU Information has been Updated');
-  //   this.getGPUInfo('complete').then(completeObj => {
-  //     console.dir(completeObj);
-  //   });
-  // });
-  // oak.app.getGPUInfo('basic').then(completeObj => {
-  //   console.dir(completeObj);
-  // });
-  // console.dir(oak.app.getGPUFeatureStatus())
-  windowObject.debug()
-
   return windowObject
 }
 
@@ -70,6 +49,7 @@ function loadWindows () {
       oakWindow.flags = union(config.flags, oakWindow.flags)
     }
     if (oakWindow.scripts) {
+      // check that all injected scripts exits and remove them all if any are not found
       oakWindow.scripts.forEach(function(part, index, scripts) {
         scripts[index] = path.resolve(part)
       })
@@ -85,24 +65,22 @@ function loadWindows () {
     }
     oakObjects[index] = loadWindow(oakWindow)
   })
-
 }
 
-// everything has to wait for the main ready event to fire
 oak.on('ready', () => {
+  /*
+   * Get a list of URI's needed for all the windows and use wait-for to wait
+   * until they are all available. eg. wait for a local apache instance to load.
+   */
   let filePrefix = os.platform() == 'win32' ? '' : 'file://'
   oakWindows.map(value => {
     value.url = value.url.startsWith("http") ? value.url :  filePrefix + path.join(__dirname, value.url)
   })
   let waitFor = oakWindows.map(value => value.url)
-  console.log("waitFor: ", waitFor)
 
-  let opts = {
-    resources: waitFor
-  }
-  waitOn(opts, function (err) {
+  waitOn({ resources: waitFor }, function (err) {
     if (err) {
-      return handleError(err);
+      console.log(err)
     }
     // once here, all resources are available
     loadWindows()

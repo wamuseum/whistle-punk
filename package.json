@@ -15,8 +15,6 @@
   "license": "ISC",
   "dependencies": {
     "config": "^3.3.3",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
     "js-yaml": "^3.14.0",
     "lodash.union": "^4.6.0",
     "wait-on": "^5.2.1"
