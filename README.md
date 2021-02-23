@@ -17,6 +17,8 @@ Sounds a bit like someone who keeps an eye on things...
     - Window size and other attributes can be individually configured.
 - Waits for all listed URLs to become available before opening them. Useful if you need to wait for a local web sever to startup before launching.
 - If the loaded web pages crash or become unresponsive, Whistle Punk will attempt to recover by reloading the page or killing and reopening the window.
+- Listens for commands on port 8000 by default, commands include:
+  - /reset (Reset all windows to their original URL and force a reload)
 - Flexible solution for logging, currently we log to syslog and ship them to our central log store using filebeat https://www.elastic.co/beats/filebeat
     - eg. log console.log messages:```oak --autoplay-policy=no-user-gesture-required ./index.js | logger -p user.info -t OAK &```
 - Arbitrary scripts can be injected into the windows. An example is included to hide the cursor for touch based kiosks where the source page does not and cannot have that feature added.

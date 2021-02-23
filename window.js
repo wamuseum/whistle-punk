@@ -1,9 +1,12 @@
 const config = require('config')
 const fs = require('fs')
+const http = require("http")
 const merge = require('lodash.merge')
 const oak = require('oak')
 const path = require('path')
 const union = require('lodash.union')
+
+let oakObjects = []
 
 function loadWindow(opts) {
   let windowObject = oak.load(opts)
@@ -25,7 +28,6 @@ function loadWindow(opts) {
 
 function loadWindows () {
   let displays = oak.getDisplays()
-  let oakObjects = []
   config.windows.forEach(function(oakWindow, index) {
     oakWindow.x =  displays[oakWindow.display].workArea.x + oakWindow.x
     oakWindow.y = displays[oakWindow.display].workArea.y + oakWindow.y
@@ -61,6 +63,44 @@ function loadWindows () {
     oakObjects[index] = loadWindow(oakWindow)
   })
   //console.dir(oak.app.getGPUFeatureStatus())
+}
+
+function resetWindows () {
+  oakObjects.forEach(async function(oakObject) {
+    // First attempt at getting loadPage() to work synchronously
+    // see https://stackoverflow.com/a/45967141
+    try {
+      await new Promise((resolve, reject) => {
+        // Here invoke our event emitter:
+        let pageLoad = oakObject.loadPage()
+        // a normal event callback:
+        pageLoad.on('update', percent => {
+        })
+        pageLoad.on('end', resolve) // call resolve when its done
+        pageLoad.on('error', reject) // don't forget this
+      })
+      oakObject.reload(false)
+    } catch (e) {
+      console.log(e)
+    }
+  })
+}
+
+const requestListener = function (req, res) {
+  switch (req.url) {
+    case "/reset":
+      resetWindows()
+      res.writeHead(200)
+      res.end('Success')
+      break
+  }
+}
+
+if (config.has('server.host')) {
+  const server = http.createServer(requestListener)
+  server.listen(config.server.port, config.server.host, () => {
+    console.log(`Server is running on http://${config.server.host}:${config.server.port}`)
+  })
 }
 
 module.exports = loadWindows

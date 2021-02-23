@@ -8,6 +8,9 @@ flags:
 shortcut:
   reload: false
   quit: false
+server:
+  host: 'localhost'
+  port: 8000
 windows:
   - display: 0
     url: './index.html'
