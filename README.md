@@ -1,6 +1,6 @@
 # Whistle Punk
 
-This is a generic launcher for HTML based interactive screens or kiosks.
+This is a generic launcher for HTML based interactive screens or kiosks. It is based off the example code provided by OakLabs https://github.com/OakLabsInc/app-multi-display
 
 We use electron via oak (https://www.npmjs.com/package/oak) for our HTML based Gallery screens, so we thought it would be appropriate
 to go with a tree/forrest/lumberjack theme, hence Whistle Punk:
