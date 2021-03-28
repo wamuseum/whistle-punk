@@ -1,3 +1,4 @@
+process.env["NODE_CONFIG_DIR"] = __dirname + "/config/" + require('path').delimiter + __dirname + "/config-override/"
 const config = require('config')
 const loadWindows = require('./window.js')
 const oak = require('oak')
