@@ -9,7 +9,6 @@ to go with a tree/forrest/lumberjack theme, hence Whistle Punk:
 
 Sounds a bit like someone who keeps an eye on things...
 
-
 ### Features:
 
 - Works cross platform, windows, linux and osx but predominantly tested on linux.
