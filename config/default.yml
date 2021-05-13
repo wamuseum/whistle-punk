@@ -11,6 +11,7 @@ shortcut:
 server:
   host: 'localhost'
   port: 8000
+waitforurls: true
 windows:
   - display: 0
     url: './index.html'
