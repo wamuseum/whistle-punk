@@ -65,7 +65,7 @@ function loadWindows () {
   //console.dir(oak.app.getGPUFeatureStatus())
 }
 
-function resetWindows () {
+function resetWindows (cache) {
   oakObjects.forEach(async function(oakObject) {
     // First attempt at getting loadPage() to work synchronously
     // see https://stackoverflow.com/a/45967141
@@ -79,7 +79,7 @@ function resetWindows () {
         pageLoad.on('end', resolve) // call resolve when its done
         pageLoad.on('error', reject) // don't forget this
       })
-      oakObject.reload(false)
+      oakObject.reload(cache)
     } catch (e) {
       console.log(e)
     }
@@ -89,7 +89,12 @@ function resetWindows () {
 const requestListener = function (req, res) {
   switch (req.url) {
     case "/reset":
-      resetWindows()
+      resetWindows(false)
+      res.writeHead(200)
+      res.end('Success')
+      break
+    case "/reset-cached":
+      resetWindows(true)
       res.writeHead(200)
       res.end('Success')
       break
