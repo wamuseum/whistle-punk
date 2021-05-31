@@ -48,7 +48,7 @@ function loadWindows () {
     if (oakWindow.scripts) {
       // check that all injected scripts exits and remove them all if any are not found
       oakWindow.scripts.forEach(function(part, index, scripts) {
-        scripts[index] = path.resolve(part)
+        scripts[index] = fs.existsSync(path.resolve(path.join(__dirname, part))) ? path.resolve(path.join(__dirname, part)) : path.resolve(part)
       })
       oakWindow.scripts.some(function(script) {
         if (fs.existsSync(script)) {
