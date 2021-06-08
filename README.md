@@ -36,7 +36,8 @@ Duplicate the window entry for multiple windows and set the display to "0", "1",
 #### Example config/local.yml
 ```yaml
 windows:
-  - display: 0
+  default:
+    display: 0
     url: './index.html'
     title: 'OAK'
     background: '#ffffff'
@@ -49,7 +50,8 @@ windows:
     x: 50
     y: 50
     node: true
-  - display: 0
+  named_display:
+    display: 0
     url: 'https://museum.wa.gov.au/'
     title: 'OAK'
     background: '#ffffff'

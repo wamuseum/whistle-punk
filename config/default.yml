@@ -13,7 +13,7 @@ server:
   port: 8000
 waitforurls: true
 #windows:
-#  display1:
+#  default:
 #    display: 0
 #    url: './index.html'
 #    title: 'OAK'
