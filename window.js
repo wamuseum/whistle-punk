@@ -28,40 +28,40 @@ function loadWindow(opts) {
 
 function loadWindows () {
   let displays = oak.getDisplays()
-  config.windows.forEach(function(oakWindow, index) {
-    oakWindow.x =  displays[oakWindow.display].workArea.x + oakWindow.x
-    oakWindow.y = displays[oakWindow.display].workArea.y + oakWindow.y
-    if (oakWindow.fullscreen) {
-      delete oakWindow.size
-      delete oakWindow.x
-      delete oakWindow.y
+  for (var key in config.windows) {
+    config.windows[key].x =  displays[config.windows[key].display].workArea.x + config.windows[key].x
+    config.windows[key].y = displays[config.windows[key].display].workArea.y + config.windows[key].y
+    if (config.windows[key].fullscreen) {
+      delete config.windows[key].size
+      delete config.windows[key].x
+      delete config.windows[key].y
     }
     if (config.has('sslexceptions')) {
-      oakWindow.sslExceptions = config.sslexceptions
+      config.windows[key].sslExceptions = config.sslexceptions
     }
     if (config.has('flags')) {
-      oakWindow.flags = union(config.flags, oakWindow.flags)
+      config.windows[key].flags = union(config.flags, config.windows[key].flags)
     }
     if (config.has('shortcut')) {
-      oakWindow.shortcut = merge(config.shortcut, oakWindow.shortcut)
+      config.windows[key].shortcut = merge(config.shortcut, config.windows[key].shortcut)
     }
-    if (oakWindow.scripts) {
+    if (config.windows[key].scripts) {
       // check that all injected scripts exits and remove them all if any are not found
-      oakWindow.scripts.forEach(function(part, index, scripts) {
+      config.windows[key].scripts.forEach(function(part, index, scripts) {
         scripts[index] = fs.existsSync(path.resolve(path.join(__dirname, part))) ? path.resolve(path.join(__dirname, part)) : path.resolve(part)
       })
-      oakWindow.scripts.some(function(script) {
+      config.windows[key].scripts.some(function(script) {
         if (fs.existsSync(script)) {
           return false
         } else {
-          delete oakWindow.scripts
+          delete config.windows[key].scripts
           console.log('missing script')
           return true
         }
       })
     }
-    oakObjects[index] = loadWindow(oakWindow)
-  })
+    oakObjects[key] = loadWindow(config.windows[key])
+  }
   //console.dir(oak.app.getGPUFeatureStatus())
 }
 

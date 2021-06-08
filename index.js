@@ -13,8 +13,8 @@ if (!config.has('windows')) {
 
 oak.on('ready', () => {
   let filePrefix = os.platform() == 'win32' ? '' : 'file://'
-  config.windows.map(value => {
-    value.url = value.url.startsWith("http") ? value.url :  filePrefix + path.join(__dirname, value.url)
+  Object.keys(config.windows).map(function(key, index) {
+    config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url :  filePrefix + path.join(__dirname, config.windows[key].url)
   })
 
   if (config.has('waitforurls') && config.waitforurls) {
@@ -22,7 +22,10 @@ oak.on('ready', () => {
      * Get a list of URI's needed for all the windows and use wait-for to wait
      * until they are all available. eg. wait for a local apache instance to load.
      */
-    let waitFor = config.windows.map(value => value.url)
+    let waitFor = [] //= config.windows.map(value => value.url)
+    for (var key in config.windows) {
+      waitFor.push(config.windows[key].url)
+    }
 
     waitOn({resources: waitFor}, function (err) {
       if (err) {
