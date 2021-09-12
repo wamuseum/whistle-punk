@@ -45,6 +45,9 @@ function loadWindows () {
     if (config.has('shortcut')) {
       config.windows[key].shortcut = merge(config.shortcut, config.windows[key].shortcut)
     }
+    if (config.windows[key].scripts === '') {
+      delete config.windows[key].scripts
+    }
     if (config.windows[key].scripts) {
       // check that all injected scripts exits and remove them all if any are not found
       config.windows[key].scripts.forEach(function(part, index, scripts) {
