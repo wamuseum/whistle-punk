@@ -1,6 +1,6 @@
 {
   "name": "whistle-punk",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "OAK launcher that handles and logs errors.",
   "main": "index.js",
   "scripts": {

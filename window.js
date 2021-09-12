@@ -65,25 +65,14 @@ function loadWindows () {
   //console.dir(oak.app.getGPUFeatureStatus())
 }
 
-function resetWindows (cache) {
-  oakObjects.forEach(async function(oakObject) {
-    // First attempt at getting loadPage() to work synchronously
-    // see https://stackoverflow.com/a/45967141
-    try {
-      await new Promise((resolve, reject) => {
-        // Here invoke our event emitter:
-        let pageLoad = oakObject.loadPage()
-        // a normal event callback:
-        pageLoad.on('update', percent => {
-        })
-        pageLoad.on('end', resolve) // call resolve when its done
-        pageLoad.on('error', reject) // don't forget this
-      })
-      oakObject.reload(cache)
-    } catch (e) {
-      console.log(e)
-    }
-  })
+async function resetWindows (cache) {
+  for( var key in oakObjects) {
+    let pageLoad = oakObjects[key].loadPage()
+    pageLoad.once('did-finish-load', () => {
+      console.log('hi')
+      pageLoad.reload()
+    })
+  }
 }
 
 const requestListener = function (req, res) {
