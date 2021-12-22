@@ -13,9 +13,15 @@ if (!config.has('windows')) {
 
 oak.on('ready', () => {
   let filePrefix = os.platform() == 'win32' ? '' : 'file://'
-  Object.keys(config.windows).map(function(key, index) {
-    config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url :  filePrefix + path.join(__dirname, config.windows[key].url)
-  })
+
+  for (let key in config.windows) {
+    if (config.windows[key] && config.windows[key].hasOwnProperty('url')) {
+      config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url : filePrefix + path.join(__dirname, config.windows[key].url)
+    } else {
+      // window has been removed by setting to false
+      delete(config.windows[key])
+    }
+  }
 
   if (config.has('waitforurls') && config.waitforurls) {
     /*
