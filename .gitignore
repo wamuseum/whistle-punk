@@ -74,6 +74,8 @@ fabric.properties
 
 /node_modules
 
+# Ignore local defaults
+/config/default.yml
 # Allow local overrides
 /config/local*
 
