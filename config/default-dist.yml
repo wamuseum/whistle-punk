@@ -1,0 +1,35 @@
+sslexceptions:
+  - 'localhost'
+  - '*.local'
+flags:
+  ignore-gpu-blacklist:
+    flag: 'ignore-gpu-blacklist'
+  enable-native-gpu-memory-buffers:
+    flag: 'enable-native-gpu-memory-buffers'
+  enable-gpu-rasterization:
+    flag: 'enable-gpu-rasterization'
+shortcut:
+  reload: false
+  quit: false
+server:
+  host: 'localhost'
+  port: 8000
+waitforurls: true
+injectscripts:
+  hidecursor:
+    script: 'hide-cursor2.js'
+windows:
+  default:
+    display: 0
+    url: './index.html'
+    title: 'OAK'
+    background: '#ffffff'
+    ontop: false
+    insecure: false
+    kiosk: false
+    fullscreen: false
+    frame: true
+    size: '1024x500'
+    x: 50
+    y: 50
+    node: true
