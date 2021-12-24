@@ -36,12 +36,21 @@ function loadWindows () {
       delete config.windows[key].x
       delete config.windows[key].y
     }
+
     if (config.has('sslexceptions')) {
       config.windows[key].sslExceptions = config.sslexceptions
     }
+
     if (config.has('flags')) {
-      config.windows[key].flags = union(config.flags, config.windows[key].flags)
+      let globalFlags = []
+      for (let globalFlagKey in config.flags) {
+        if (config.flags[globalFlagKey] && config.flags[globalFlagKey].hasOwnProperty('flag')) {
+          globalFlags.push(config.flags[globalFlagKey].flag)
+        }
+      }
+      config.windows[key].flags = globalFlags
     }
+
     if (config.has('shortcut')) {
       config.windows[key].shortcut = merge(config.shortcut, config.windows[key].shortcut)
     }
