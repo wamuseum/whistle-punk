@@ -54,10 +54,32 @@ function loadWindows () {
     if (config.has('shortcut')) {
       config.windows[key].shortcut = merge(config.shortcut, config.windows[key].shortcut)
     }
-    if (config.windows[key].scripts === '') {
-      delete config.windows[key].scripts
+
+    let globalScripts = []
+    if (config.has('injectscripts')) {
+      for (let globalScriptsKey in config.injectscripts) {
+        if (config.injectscripts[globalScriptsKey] && config.injectscripts[globalScriptsKey].hasOwnProperty('script')) {
+          globalScripts.push(config.injectscripts[globalScriptsKey].injectscripts.script)
+        }
+      }
     }
-    if (config.windows[key].scripts) {
+
+    let windowScripts = []
+    if (config.windows[key].hasOwnProperty('injectscripts')) {
+      for (let windowScriptsKey in config.windows[key].injectscripts) {
+        if (config.windows[key].injectscripts[windowScriptsKey] && config.windows[key].injectscripts[windowScriptsKey].hasOwnProperty('script')) {
+          windowScripts.push(config.windows[key].injectscripts[windowScriptsKey].script)
+        }
+      }
+    }
+
+    if (globalScripts.length || windowScripts.length) {
+      config.windows[key].scripts = union(globalScripts, windowScripts)
+    } else {
+      delete(config.windows[key].scripts)
+    }
+
+    if (config.windows[key].hasOwnProperty('scripts')) {
       // check that all injected scripts exits and remove them all if any are not found
       config.windows[key].scripts.forEach(function(part, index, scripts) {
         scripts[index] = fs.existsSync(path.resolve(path.join(__dirname, part))) ? path.resolve(path.join(__dirname, part)) : path.resolve(part)
