@@ -59,7 +59,7 @@ function loadWindows () {
     if (config.has('injectscripts')) {
       for (let globalScriptsKey in config.injectscripts) {
         if (config.injectscripts[globalScriptsKey] && config.injectscripts[globalScriptsKey].hasOwnProperty('script')) {
-          globalScripts.push(config.injectscripts[globalScriptsKey].injectscripts.script)
+          globalScripts.push(config.injectscripts[globalScriptsKey].script)
         }
       }
     }
