@@ -80,19 +80,16 @@ function loadWindows () {
     }
 
     if (config.windows[key].hasOwnProperty('scripts')) {
-      // check that all injected scripts exits and remove them all if any are not found
+      // remove scripts that cannot be found on disk
       config.windows[key].scripts.forEach(function(part, index, scripts) {
-        scripts[index] = fs.existsSync(path.resolve(path.join(__dirname, part))) ? path.resolve(path.join(__dirname, part)) : path.resolve(part)
-      })
-      config.windows[key].scripts.some(function(script) {
-        if (fs.existsSync(script)) {
-          return false
-        } else {
-          delete config.windows[key].scripts
-          console.log('missing script')
-          return true
+        scripts[index] = path.resolve(part)
+        if (!fs.existsSync(scripts[index])) {
+          config.windows[key].scripts.splice(index,1)
         }
       })
+      if (!config.windows[key].scripts.length) {
+        delete config.windows[key].scripts
+      }
     }
     oakObjects[key] = loadWindow(config.windows[key])
   }
