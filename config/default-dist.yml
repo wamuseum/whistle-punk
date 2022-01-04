@@ -17,7 +17,7 @@ server:
 waitforurls: true
 injectscripts:
   hidecursor:
-    script: 'hide-cursor2.js'
+    script: 'hide-cursor.js'
 windows:
   default:
     display: 0
