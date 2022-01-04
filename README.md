@@ -27,14 +27,39 @@ Sounds a bit like someone who keeps an eye on things...
   
 ### Usage
 
+You will need to copy config/default-dist.yml to config/default.yml. 
+
 ```npm start``` should get you a window that tests unresponsive and crashed pages.
 
-To load your own URLs, copy src/default.yml to src/local.yml and adapt.
+Duplicate the window entry for multiple windows and set the display to "0", "1", "2", "3" etc. depending on how many you
+have plugged in. This structure matches the oak.load parameters: https://www.npmjs.com/package/oak#oakloadoptions-callback
 
-Duplicate the window entry for multiple windows and set the display to "0", "1", "2", "3" etc. depending on how many you have plugged in. This structure matches the oak.load parameters: https://www.npmjs.com/package/oak#oakloadoptions-callback
+There are two places to add "injectscripts", one at the global level and one at the window level. This allows windows to
+inherit injected script while adding more specific ones. This structure, to enable inheritance, is designed to make it
+easier to manage a large number of installs using a tool like puppet.
 
-#### Example config/local.yml
+#### config/default-dist.yml
 ```yaml
+sslexceptions:
+  - 'localhost'
+  - '*.local'
+flags:
+  ignore-gpu-blacklist:
+    flag: 'ignore-gpu-blacklist'
+  enable-native-gpu-memory-buffers:
+    flag: 'enable-native-gpu-memory-buffers'
+  enable-gpu-rasterization:
+    flag: 'enable-gpu-rasterization'
+shortcut:
+  reload: false
+  quit: false
+server:
+  host: 'localhost'
+  port: 8000
+waitforurls: true
+injectscripts:
+  hidecursor:
+    script: 'hide-cursor.js'
 windows:
   default:
     display: 0
@@ -50,20 +75,7 @@ windows:
     x: 50
     y: 50
     node: true
-  named_display:
-    display: 0
-    url: 'https://museum.wa.gov.au/'
-    title: 'OAK'
-    background: '#ffffff'
-    ontop: false
-    insecure: false
-    kiosk: false
-    fullscreen: false
-    frame: false
-    size: '1024x500'
-    x: 100
-    y: 100
-    node: false
-    scripts:
-      - 'hide-cursor.js'
+    injectscripts:
+      additionalscript:
+        script: 'additional.js'
 ```
