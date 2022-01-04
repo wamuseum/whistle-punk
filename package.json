@@ -1,6 +1,6 @@
 {
   "name": "whistle-punk",
-  "version": "1.0.3",
+  "version": "2.0.1",
   "description": "OAK launcher that handles and logs errors.",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "js-yaml": "^3.14.0",
     "lodash.merge": "^4.6.2",
     "lodash.union": "^4.6.0",
-    "oak": "^7.0.0",
+    "oak": "^9.0.0",
     "wait-on": "^5.2.1"
   },
   "devDependencies": {}
