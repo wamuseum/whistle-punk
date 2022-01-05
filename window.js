@@ -96,28 +96,32 @@ function loadWindows () {
   //console.dir(oak.app.getGPUFeatureStatus())
 }
 
-async function resetWindows (cache) {
+async function resetWindows (reload = false, cache = false) {
   for( var key in oakObjects) {
     let pageLoad = oakObjects[key].loadPage()
-    pageLoad.once('did-finish-load', () => {
-      console.log('hi')
-      pageLoad.reload()
-    })
+    if (reload) {
+      pageLoad.once('did-finish-load', () => {
+        pageLoad.reload(cache)
+      })
+    }
   }
 }
 
 const requestListener = function (req, res) {
   switch (req.url) {
     case "/reset":
-      resetWindows(false)
+      resetWindows()
       res.writeHead(200)
-      res.end('Success')
+      res.end('Success\n')
       break
-    case "/reset-cached":
-      resetWindows(true)
+    case "/reload":
+      resetWindows(true, false)
       res.writeHead(200)
-      res.end('Success')
+      res.end('Success\n')
       break
+    default:
+      res.writeHead(404)
+      res.end('404 not found\n')
   }
 }
 
