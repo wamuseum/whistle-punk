@@ -10,19 +10,22 @@ let oakObjects = []
 
 function loadWindow(opts) {
   let windowObject = oak.load(opts)
-  windowObject.on('unresponsive', function(event) {
-    console.log('page has become unresponsive: ' + this.opts.url)
-    this.loadPage()
-  })
-  windowObject.on('crashed', function(event) {
-    console.log('crashed')
-    loadWindow(this.opts)
-    this.close()
-  })
-  windowObject.on('loadFailed', function(event) {
-    console.log('page failed to load')
-    this.loadPage()
-  })
+  if (!opts.hasOwnProperty('crashprevention') || (opts.hasOwnProperty('crashprevention') && opts.crashprevention)) {
+    console.log('Crash Prevention')
+    windowObject.on('unresponsive', function (event) {
+      console.log('page has become unresponsive: ' + this.opts.url)
+      this.loadPage()
+    })
+    windowObject.on('crashed', function (event) {
+      console.log('crashed')
+      loadWindow(this.opts)
+      this.close()
+    })
+    windowObject.on('loadFailed', function (event) {
+      console.log('page failed to load')
+      this.loadPage()
+    })
+  }
   return windowObject
 }
 
