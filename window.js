@@ -2,14 +2,17 @@ const config = require('config')
 const fs = require('fs')
 const http = require("http")
 const merge = require('lodash.merge')
-const oak = require('oak')
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
 const path = require('path')
 const union = require('lodash.union')
 
 let oakObjects = []
 
 function loadWindow(opts) {
-  let windowObject = oak.load(opts)
+  let windowObject = new BrowserWindow(opts);
+  windowObject.loadURL(opts.url);
   if (!opts.hasOwnProperty('crashprevention') || (opts.hasOwnProperty('crashprevention') && opts.crashprevention)) {
     console.log('Crash Prevention')
     windowObject.on('unresponsive', function (event) {
@@ -30,7 +33,7 @@ function loadWindow(opts) {
 }
 
 function loadWindows () {
-  let displays = oak.getDisplays()
+  let displays = electron.screen.getAllDisplays();
   for (var key in config.windows) {
     config.windows[key].x =  displays[config.windows[key].display].workArea.x + config.windows[key].x
     config.windows[key].y = displays[config.windows[key].display].workArea.y + config.windows[key].y

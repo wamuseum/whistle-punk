@@ -1,7 +1,7 @@
 process.env["NODE_CONFIG_DIR"] = __dirname + "/config/" + require('path').delimiter + __dirname + "/config-override/"
 const config = require('config')
-const loadWindows = require('./window.js')
-const oak = require('oak')
+const loadWindows = require('./window.js');
+const { app, BrowserWindow, shell, ipcMain } = require('electron');
 const os = require('os')
 const path = require('path')
 const waitOn = require('wait-on')
@@ -11,7 +11,7 @@ if (!config.has('windows')) {
   process.exit(1)
 }
 
-oak.on('ready', () => {
+app.whenReady().then(() => {
   let filePrefix = os.platform() == 'win32' ? '' : 'file://'
 
   for (let key in config.windows) {
@@ -43,4 +43,4 @@ oak.on('ready', () => {
   } else {
     loadWindows()
   }
-})
+}).catch(console.error);
