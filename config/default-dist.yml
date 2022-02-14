@@ -17,6 +17,9 @@ server:
   host: 'localhost'
   port: 8000
 waitforurls: true
+extrawaitforurls:
+  visit:
+    url: 'https://visit.museum.wa.gov.au'
 injectscripts:
   hidecursor:
     script: 'hide-cursor.js'
