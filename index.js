@@ -5,8 +5,6 @@ const os = require('os')
 const path = require('path')
 const waitOn = require('wait-on')
 
-let config = {};
-
 if (args.deBug) {
   console.dir(args);
 }
@@ -17,6 +15,7 @@ if (args?._?.[0]?.length && args?._?.[0]?.match(/\.js$/)) {
 }
 else {
   // Continue with Whistle Punk...
+  let config = {};
   if (args?._?.[0]?.length && args?._?.[0]?.match(/\.ya?ml$/)) {
     try {
       config = yaml.load(fs.readFileSync(path.resolve(args?._?.[0]),  'utf8'));
