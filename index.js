@@ -32,6 +32,11 @@ oak.on('ready', () => {
     for (var key in config.windows) {
       waitFor.push(config.windows[key].url)
     }
+    if (config.has('extrawaitforurls')) {
+      for (var key in config.extrawaitforurls) {
+        waitFor.push(config.extrawaitforurls[key].url)
+      }
+    }
 
     waitOn({resources: waitFor}, function (err) {
       if (err) {
