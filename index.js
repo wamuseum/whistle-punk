@@ -34,7 +34,9 @@ oak.on('ready', () => {
     }
     if (config.has('extrawaitforurls')) {
       for (var key in config.extrawaitforurls) {
-        waitFor.push(config.extrawaitforurls[key].url)
+        if (config.extrawaitforurls[key].hasOwnProperty('url')) {
+          waitFor.push(config.extrawaitforurls[key].url)
+        }
       }
     }
 
