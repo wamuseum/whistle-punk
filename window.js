@@ -85,7 +85,7 @@ function loadWindows () {
     if (config.windows[key].hasOwnProperty('scripts')) {
       // remove scripts that cannot be found on disk
       config.windows[key].scripts.forEach(function(part, index, scripts) {
-        scripts[index] = path.resolve(part)
+        scripts[index] = path.resolve(__dirname, part)
         if (!fs.existsSync(scripts[index])) {
           config.windows[key].scripts.splice(index,1)
         }
