@@ -14,11 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "config": "^3.3.3",
-    "electron": "^17.0.0",
+    "config": "^3.3.9",
+    "electron": "^23.0.0",
     "js-yaml": "^3.14.0",
     "lodash.merge": "^4.6.2",
     "lodash.union": "^4.6.0",
-    "wait-on": "^6.0.0"
+    "wait-on": "^7.0.1"
   }
 }
