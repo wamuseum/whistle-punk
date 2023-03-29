@@ -2,38 +2,50 @@ const config = require('config')
 const fs = require('fs')
 const http = require("http")
 const merge = require('lodash.merge')
-const electron = require('electron');
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const {app, BrowserWindow, ipcMain, screen} = require('electron');
 const path = require('path')
 const union = require('lodash.union')
 
 let oakObjects = []
 
+// IPC listener
+ipcMain.on('_window', async (event, message) => {
+  console.log(message);
+  event.returnValue = message;
+  event.sender.send('_window', 'Hi Yourself');
+});
+
 function loadWindow(opts) {
   let windowObject = new BrowserWindow(opts);
+  windowObject.opts = opts;
+
   windowObject.loadURL(opts.url);
-  if (!opts.hasOwnProperty('crashprevention') || (opts.hasOwnProperty('crashprevention') && opts.crashprevention)) {
-    console.log('Crash Prevention')
-    windowObject.on('unresponsive', function (event) {
-      console.log('page has become unresponsive: ' + this.opts.url)
-      this.loadPage()
-    })
-    windowObject.on('crashed', function (event) {
-      console.log('crashed')
-      loadWindow(this.opts)
-      this.close()
-    })
-    windowObject.on('loadFailed', function (event) {
-      console.log('page failed to load')
-      this.loadPage()
-    })
-  }
+  windowObject.webContents
+  .on('dom-ready', () => {
+    // sending our optional scripts to the preload window listener
+    // console.dir(windowObject);
+    windowObject.webContents.send('_scriptsToInject', 'hi');
+    // _this.send('dom-ready')
+  })
+
+  windowObject.webContents.on("new-window", function(event, url) {
+    event.preventDefault();
+    console.log('blocked new window: ' + url)
+  });
+  windowObject.webContents.on("will-navigate", function(event, url) {
+    if (url === '') {
+      event.preventDefault();
+      console.log('blocked: ' + url)
+    } else {
+      console.log('navigating to: ' + url);
+    }
+  });
+
   return windowObject
 }
 
 function loadWindows () {
-  let displays = electron.screen.getAllDisplays();
+  let displays = screen.getAllDisplays();
   for (var key in config.windows) {
     config.windows[key].x =  displays[config.windows[key].display].workArea.x + config.windows[key].x
     config.windows[key].y = displays[config.windows[key].display].workArea.y + config.windows[key].y
@@ -104,11 +116,11 @@ function loadWindows () {
 
 async function resetWindows (reload = false, cache = false) {
   for( var key in oakObjects) {
-    let pageLoad = oakObjects[key].loadPage()
+    let pageLoad = oakObjects[key].loadURL(oakObjects[key].opts.url);
     if (reload) {
-      pageLoad.once('did-finish-load', () => {
-        pageLoad.reload(cache)
-      })
+      // pageLoad.once('did-finish-load', () => {
+      oakObjects[key].reload(cache)
+      // })
     }
   }
 }
