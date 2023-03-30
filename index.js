@@ -6,6 +6,7 @@ const os = require('os')
 const path = require('path')
 const waitOn = require('wait-on')
 
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS=  true;
 if (!config.has('windows')) {
   console.log('Error loading oakWindows config')
   process.exit(1)
