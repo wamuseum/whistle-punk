@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {
+// window.addEventListener('DOMContentLoaded', () => {
 
   // Create our stylesheet
   var hideCursor = document.createElement('style');
@@ -16,4 +16,4 @@ window.addEventListener('DOMContentLoaded', () => {
     console.log('Error hiding cursor');
     console.log(err);
   }
-});
+// });

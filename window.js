@@ -24,7 +24,7 @@ function loadWindow(opts) {
   .on('dom-ready', () => {
     // sending our optional scripts to the preload window listener
     // console.dir(windowObject);
-    windowObject.webContents.send('_scriptsToInject', 'hi');
+    windowObject.webContents.send('_scriptsToInject', opts?.scripts);
     // _this.send('dom-ready')
   })
 
@@ -109,7 +109,14 @@ function loadWindows () {
         delete config.windows[key].scripts
       }
     }
+
+    config.windows[key].webPreferences = {
+      sandbox: false,
+      preload: path.join(__dirname, 'preload.js'),
+    }
+
     oakObjects[key] = loadWindow(config.windows[key])
+    oakObjects[key].webContents.openDevTools();
   }
   //console.dir(oak.app.getGPUFeatureStatus())
 }
