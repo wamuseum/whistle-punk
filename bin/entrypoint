@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+const { join } = require('path')
+const { spawn } = require('child_process')
+const electron = require('electron')
+const _ = require('lodash')
+
+let args =   [
+  join(__dirname, '..'),
+  ...(process.argv.splice(2, process.argv.length))
+]
+
+if (process.env.HOME && process.env.HOME === '/root') {
+  args.push('--no-sandbox')
+}
+
+spawn(
+  electron,
+  args,
+  {
+    stdio: 'inherit',
+    env: _.defaults(process.env, {
+      ELECTRON_DISABLE_SECURITY_WARNINGS: true
+    })
+  }
+)
