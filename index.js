@@ -14,8 +14,7 @@ if (args.deBug) {
   console.dir(args);
 }
 
-process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
-
+// if called with "whistle-punk config.yml"
 if (args?._?.[0]?.length && args?._?.[0].match(/\.ya?ml$/)) {
   try {
     config = yaml.load(fs.readFileSync(path.resolve(args?._?.[0]),  'utf8'));
@@ -25,16 +24,26 @@ if (args?._?.[0]?.length && args?._?.[0].match(/\.ya?ml$/)) {
     process.exit(1);
   }
 }
-else {
+else { // load single url using yargs params
   if (args?._?.[0]?.length) {
     config = {
       windows: {
-        default: {
-          url: args?._?.[0],
-          display: 0,
-        }
+        default: {}
       }
     }
+    config.windows.default.url =  args?._?.[0];
+    config.windows.default.frame = args?.frame;
+    if (!(args?.x || args?.y || args.width || args?.height)) {
+      config.windows.default.fullscreen = args?.fullscreen;
+      config.windows.default.kiosk = args?.kiosk;
+    }
+    config.windows.default.x = args?.x || 0;
+    config.windows.default.y = args?.y || 0;
+    config.windows.default.display = args?.display;
+    config.windows.default.width = args?.width;
+    config.windows.default.height = args?.height;
+    config.windows.default.alwaysOnTop = args.ontop;
+    console.log(config);
   }
   else {
     console.log('Invalid');
