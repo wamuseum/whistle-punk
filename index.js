@@ -15,7 +15,7 @@ if (args.deBug) {
 }
 
 // if called with "whistle-punk config.yml"
-if (args?._?.[0]?.length && args?._?.[0].match(/\.ya?ml$/)) {
+if (args?._?.[0]?.length && args?._?.[0]?.match(/\.ya?ml$/)) {
   try {
     config = yaml.load(fs.readFileSync(path.resolve(args?._?.[0]),  'utf8'));
   }
