@@ -1,14 +1,45 @@
 #!/usr/bin/env node
+const argv = require('../lib/args.js');
+const { join } = require('path');
+const { spawn } = require('child_process');
+const electron = require('electron');
+const defaults = require('lodash.defaults');
+const url = require("url");
 
-const { join } = require('path')
-const { spawn } = require('child_process')
-const electron = require('electron')
-const _ = require('lodash')
 
-let args =   [
-  join(__dirname, '..'),
-  ...(process.argv.splice(2, process.argv.length))
+// Load initial args and strip positional arguments
+let args = [
+  ...(process.argv.splice(2, process.argv.length).filter(n => !argv?._?.includes(n)))
 ]
+
+// whistle-punk config.yml: launch with index.js and
+//  grab all config from yaml file.
+if (argv?._?.[0]?.match(/\.ya?ml$/)) {
+  args.unshift(argv?._?.[0]);
+  args.unshift(join(__dirname, '..'));
+  console.dir(args);
+}
+else {
+// hand control over to javascript file
+//  (ie. electron ./index.js) and then you are on your own.
+  if (argv?._?.[0]?.match(/\.js$/)) {
+    args.unshift(argv?._?.[0]);
+  }
+  else {
+    // Finally load html page/URL with --width, --kiosk args
+    try {
+      const urlToLoad = new URL(argv?._?.[0]);
+      if (['http:', 'https:', 'file:'].includes(urlToLoad?.protocol)) {
+        args.unshift(join(__dirname, '..'));
+        args.push(argv?._?.[0]);
+      }
+    } catch (error) {
+      // Assume file path for now
+      args.unshift(join(__dirname, '..'));
+      args.push(argv?._?.[0]);
+    }
+  }
+}
 
 if (process.env.HOME && process.env.HOME === '/root') {
   args.push('--no-sandbox')
@@ -19,7 +50,7 @@ spawn(
   args,
   {
     stdio: 'inherit',
-    env: _.defaults(process.env, {
+    env: defaults(process.env, {
       ELECTRON_DISABLE_SECURITY_WARNINGS: true
     })
   }
