@@ -1,6 +1,8 @@
 sslexceptions:
   - 'localhost'
   - '*.local'
+domainwhitelist:
+  - test.local
 flags:
   ignore-gpu-blacklist:
     flag: 'ignore-gpu-blacklist'
@@ -28,8 +30,8 @@ windows:
     insecure: false
     kiosk: false
     fullscreen: false
-    frame: true
-    size: '1024x500'
+    frame: false
+    size: '500x500'
     x: 50
     y: 50
     node: true

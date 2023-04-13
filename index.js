@@ -43,6 +43,9 @@ else { // load single url using yargs params
     config.windows.default.width = args?.width;
     config.windows.default.height = args?.height;
     config.windows.default.alwaysOnTop = args.ontop;
+    if (args?.whiteListDomain) {
+      config.domainwhitelist = args?.whiteListDomain
+    }
     console.log(config);
   }
   else {
