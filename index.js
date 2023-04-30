@@ -1,12 +1,9 @@
 const yaml = require('js-yaml');
 const fs   = require('fs');
 const args = require('./lib/args.js')
-const {loadWindows} = require('./lib/window.js');
-const { app } = require('electron');
 const os = require('os')
 const path = require('path')
 const waitOn = require('wait-on')
-const { setUpServer } = require('./lib/server');
 
 let config = {};
 
@@ -14,81 +11,97 @@ if (args.deBug) {
   console.dir(args);
 }
 
-process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
-
-if (args?._?.[0]?.length && args?._?.[0].match(/\.ya?ml$/)) {
-  try {
-    config = yaml.load(fs.readFileSync(path.resolve(args?._?.[0]),  'utf8'));
-  }
-  catch (error) {
-    console.log(error);
-    process.exit(1);
-  }
+if (args?._?.[0]?.length && args?._?.[0]?.match(/\.js$/)) {
+  // hand over to javascript file that replaces whistle-punk
+  require(args?._?.[0]);
 }
 else {
-  if (args?._?.[0]?.length) {
-    config = {
-      windows: {
-        default: {
-          url: args?._?.[0],
-          display: 0,
-        }
-      }
+  // Continue with Whistle Punk...
+  if (args?._?.[0]?.length && args?._?.[0]?.match(/\.ya?ml$/)) {
+    try {
+      config = yaml.load(fs.readFileSync(path.resolve(args?._?.[0]),  'utf8'));
+    }
+    catch (error) {
+      console.log(error);
+      process.exit(1);
     }
   }
-  else {
-    console.log('Invalid');
-    process.exit(1);
-  }
-}
-
-if (!config?.windows) {
-  console.log('Error loading oakWindows config')
-  process.exit(1)
-}
-
-if (config?.server) {
-  setUpServer(config);
-}
-app.whenReady().then(() => {
-  let filePrefix = os.platform() == 'win32' ? '' : 'file://'
-
-  for (let key in config.windows) {
-    if (config.windows[key] && config.windows[key].hasOwnProperty('url')) {
-      config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url : filePrefix + path.join(__dirname, config.windows[key].url)
+  else { // load single url using yargs params
+    if (args?._?.[0]?.length) {
+      config = {
+        windows: {
+          default: {}
+        }
+      }
+      config.windows.default.url =  args?._?.[0];
+      config.windows.default.frame = args?.frame;
+      if (!(args?.x || args?.y || args.width || args?.height)) {
+        config.windows.default.fullscreen = args?.fullscreen;
+        config.windows.default.kiosk = args?.kiosk;
+      }
+      config.windows.default.x = args?.x || 0;
+      config.windows.default.y = args?.y || 0;
+      config.windows.default.display = args?.display;
+      config.windows.default.width = args?.width;
+      config.windows.default.height = args?.height;
+      config.windows.default.alwaysOnTop = args.ontop;
+      if (args?.whiteListDomain) {
+        config.domainwhitelist = args?.whiteListDomain
+      }
+      console.log(config);
     }
     else {
-      // window has been removed by setting to false
-      delete (config.windows[key])
+      console.log('Invalid');
+      process.exit(1);
     }
   }
 
-  if (config?.waitforurls && config.waitforurls) {
-    /*
-     * Get a list of URI's needed for all the windows and use wait-for to wait
-     * until they are all available. eg. wait for a local apache instance to load.
-     */
-    let waitFor = [] //= config.windows.map(value => value.url)
-    for (var key in config.windows) {
-      waitFor.push(config.windows[key].url)
+  const { app } = require('electron');
+  const {loadWindows} = require('./lib/window.js');
+  const { setUpServer } = require('./lib/server');
+
+  if (!config?.windows) {
+    console.log('Error loading oakWindows config')
+    process.exit(1)
+  }
+
+  if (config?.server) {
+    setUpServer(config);
+  }
+
+  app.whenReady().then(() => {
+    let filePrefix = os.platform() == 'win32' ? '' : 'file://'
+
+    for (let key in config.windows) {
+      if (config.windows[key] && config.windows[key].hasOwnProperty('url')) {
+        config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url : filePrefix + path.join(__dirname, config.windows[key].url)
+      }
+      else {
+        // window has been removed by setting to false
+        delete (config.windows[key])
+      }
     }
-    if (config.has('extrawaitforurls')) {
-      for (var key in config.extrawaitforurls) {
-        if (config.extrawaitforurls[key].hasOwnProperty('url')) {
-          waitFor.push(config.extrawaitforurls[key].url)
+
+    if (config?.waitforurls && config.waitforurls) {
+      /*
+       * Get a list of URI's needed for all the windows and use wait-for to wait
+       * until they are all available. eg. wait for a local apache instance to load.
+       */
+      let waitFor = [] //= config.windows.map(value => value.url)
+      for (var key in config.windows) {
+        waitFor.push(config.windows[key].url)
+      }
+
+      waitOn({resources: waitFor}, function (err) {
+        if (err) {
+          console.log(err)
         }
-      }
+        // once here, all resources are available
+        loadWindows(config)
+      });
     }
-
-    waitOn({resources: waitFor}, function (err) {
-      if (err) {
-        console.log(err)
-      }
-      // once here, all resources are available
+    else {
       loadWindows(config)
-    });
-  }
-  else {
-    loadWindows(config)
-  }
-}).catch(console.error);
+    }
+  }).catch(console.error);
+}
