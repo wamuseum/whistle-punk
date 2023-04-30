@@ -1,25 +1,25 @@
 #!/usr/bin/env node
+const { join } = require('path');
+const { spawn } = require('child_process');
+const defaults = require('lodash.defaults');
 
-const { join } = require('path')
-const { spawn } = require('child_process')
-const electron = require('electron')
-const _ = require('lodash')
-
-let args =   [
-  join(__dirname, '..'),
+// remove node and entrypoint scripts from argv and then spawn electron with the same args
+let args = [
   ...(process.argv.splice(2, process.argv.length))
 ]
+
+args.unshift(join(__dirname, '..'));
 
 if (process.env.HOME && process.env.HOME === '/root') {
   args.push('--no-sandbox')
 }
 
 spawn(
-  electron,
+  'electron',
   args,
   {
     stdio: 'inherit',
-    env: _.defaults(process.env, {
+    env: defaults(process.env, {
       ELECTRON_DISABLE_SECURITY_WARNINGS: true
     })
   }
