@@ -4,6 +4,7 @@ const args = require('./lib/args.js')
 const os = require('os')
 const path = require('path')
 const waitOn = require('wait-on')
+const {minimatch} = require("minimatch");
 
 if (args.deBug) {
   console.dir(args);
@@ -47,6 +48,7 @@ else {
       if (args?.whiteListDomain) {
         config.domainwhitelist = args?.whiteListDomain
       }
+      config.sslexceptions = args?.ssl;
       console.log(config);
     }
     else {
@@ -87,6 +89,17 @@ else {
     //     }
     //   }
     // }
+
+    app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+      let { hostname } = new URL(url)
+      console.log(config?.sslexceptions);
+      let isTrusted = false
+      if (config?.sslexceptions?.filter( pat => minimatch(hostname, pat))) {
+        event.preventDefault();
+        isTrusted = true
+      }
+      callback(isTrusted);
+    });
 
     if (config?.waitforurls && config.waitforurls) {
       /*
