@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const electron = require('electron');
 const { join } = require('path');
 const { spawn } = require('child_process');
 const defaults = require('lodash.defaults');
@@ -15,7 +16,7 @@ if (process.env.HOME && process.env.HOME === '/root') {
 }
 
 spawn(
-  'electron',
+  electron,
   args,
   {
     stdio: 'inherit',
