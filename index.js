@@ -80,13 +80,13 @@ else {
         delete (config.windows[key])
       }
     }
-    if (config.has('extrawaitforurls')) {
-      for (var key in config.extrawaitforurls) {
-        if (config.extrawaitforurls[key].hasOwnProperty('url')) {
-          waitFor.push(config.extrawaitforurls[key].url)
-        }
-      }
-    }
+    // if (config.has('extrawaitforurls')) {
+    //   for (var key in config.extrawaitforurls) {
+    //     if (config.extrawaitforurls[key].hasOwnProperty('url')) {
+    //       waitFor.push(config.extrawaitforurls[key].url)
+    //     }
+    //   }
+    // }
 
     if (config?.waitforurls && config.waitforurls) {
       /*
