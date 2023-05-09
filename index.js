@@ -72,7 +72,9 @@ else {
 
   app.whenReady().then(() => {
     let filePrefix = os.platform() == 'win32' ? '' : 'file://'
-
+    
+    app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
+    
     for (let key in config.windows) {
       if (config.windows[key] && config.windows[key].hasOwnProperty('url')) {
         config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url : filePrefix + path.join(__dirname, config.windows[key].url)
