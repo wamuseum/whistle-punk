@@ -62,7 +62,7 @@ else {
   const { setUpServer } = require('./lib/server');
 
   if (!config?.windows) {
-    console.log('Error loading oakWindows config')
+    console.log('Error loading config, no Windows listed')
     process.exit(1)
   }
 
@@ -92,9 +92,9 @@ else {
     //   }
     // }
 
+    // disable cert errors for specified domains
     app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
       let { hostname } = new URL(url)
-      console.log(config?.sslexceptions);
       let isTrusted = false
       if (config?.sslexceptions?.filter( pat => minimatch(hostname, pat))) {
         event.preventDefault();
