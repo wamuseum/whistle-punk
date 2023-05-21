@@ -4,7 +4,7 @@
   "description": "OAK launcher that handles and logs errors.",
   "main": "index.js",
   "scripts": {
-    "start": "node_modules/.bin/electron ./index.js",
+    "start": "bin/entrypoint ./config/default-dist.yml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
