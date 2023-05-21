@@ -1,10 +1,10 @@
-const yaml = require('js-yaml');
+const args = require('./lib/args.js');
 const fs   = require('fs');
-const args = require('./lib/args.js')
-const os = require('os')
-const path = require('path')
-const waitOn = require('wait-on')
-const {minimatch} = require("minimatch");
+const { minimatch } = require("minimatch");
+const os = require('os');
+const path = require('path');
+const waitOn = require('wait-on');
+const yaml = require('js-yaml');
 
 if (args.deBug) {
   console.dir(args);
@@ -32,7 +32,7 @@ else {
         windows: {
           default: {}
         }
-      }
+      };
       config.windows.default.url =  args?._?.[0];
       config.windows.default.frame = args?.frame;
       if (!(args?.x || args?.y || args.width || args?.height)) {
@@ -46,7 +46,7 @@ else {
       config.windows.default.height = args?.height;
       config.windows.default.alwaysOnTop = args.ontop;
       if (args?.whiteListDomain) {
-        config.domainwhitelist = args?.whiteListDomain
+        config.domainwhitelist = args?.whiteListDomain;
       }
       config.sslexceptions = args?.ssl;
       console.log(config);
@@ -58,14 +58,14 @@ else {
   }
 
   const { app } = require('electron');
-  const {loadWindows} = require('./lib/window.js');
+  const { loadWindows } = require('./lib/window.js');
   const { setUpServer } = require('./lib/server');
 
   config.basePath = args?._?.[0].startsWith('http') ? '' : path.dirname(path.resolve(args?._?.[0]));
 
   if (!config?.windows) {
-    console.log('Error loading config, no Windows listed')
-    process.exit(1)
+    console.log('Error loading config, no Windows listed');
+    process.exit(1);
   }
 
   if (config?.server) {
@@ -73,17 +73,17 @@ else {
   }
 
   app.whenReady().then(() => {
-    let filePrefix = os.platform() == 'win32' ? '' : 'file://'
+    let filePrefix = os.platform() == 'win32' ? '' : 'file://';
     
     app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
     
     for (let key in config.windows) {
       if (config.windows[key] && config.windows[key].hasOwnProperty('url')) {
-        config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url : filePrefix + path.join(__dirname, config.windows[key].url)
+        config.windows[key].url = config.windows[key].url.startsWith("http") ? config.windows[key].url : filePrefix + path.join(__dirname, config.windows[key].url);
       }
       else {
         // window has been removed by setting to false
-        delete (config.windows[key])
+        delete (config.windows[key]);
       }
     }
     // if (config.has('extrawaitforurls')) {
@@ -96,11 +96,11 @@ else {
 
     // disable cert errors for specified domains
     app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-      let { hostname } = new URL(url)
-      let isTrusted = false
+      let { hostname } = new URL(url);
+      let isTrusted = false;
       if (config?.sslexceptions?.filter( pat => minimatch(hostname, pat))) {
         event.preventDefault();
-        isTrusted = true
+        isTrusted = true;
       }
       callback(isTrusted);
     });
@@ -110,21 +110,21 @@ else {
        * Get a list of URI's needed for all the windows and use wait-for to wait
        * until they are all available. eg. wait for a local apache instance to load.
        */
-      let waitFor = [] //= config.windows.map(value => value.url)
-      for (var key in config.windows) {
-        waitFor.push(config.windows[key].url)
+      let waitFor = []; //= config.windows.map(value => value.url)
+      for (let key in config.windows) {
+        waitFor.push(config.windows[key].url);
       }
 
-      waitOn({resources: waitFor}, function (err) {
+      waitOn({resources: waitFor}, (err) => {
         if (err) {
-          console.log(err)
+          console.log(err);
         }
         // once here, all resources are available
-        loadWindows(config)
+        loadWindows(config);
       });
     }
     else {
-      loadWindows(config)
+      loadWindows(config);
     }
   }).catch(console.error);
 }
