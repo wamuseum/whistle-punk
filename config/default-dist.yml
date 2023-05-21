@@ -50,7 +50,7 @@ windows:
     height: 500
     x: 50
     y: 50
-    node: true
+    node: false
     injectscripts:
       usejquery:
         path: 'inject-scripts/usejquery.js'
