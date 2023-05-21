@@ -61,6 +61,8 @@ else {
   const {loadWindows} = require('./lib/window.js');
   const { setUpServer } = require('./lib/server');
 
+  config.basePath = args?._?.[0].startsWith('http') ? '' : path.dirname(path.resolve(args?._?.[0]));
+
   if (!config?.windows) {
     console.log('Error loading config, no Windows listed')
     process.exit(1)
