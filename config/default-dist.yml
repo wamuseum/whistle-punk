@@ -20,9 +20,21 @@ waitforurls: true
 extrawaitforurls:
   visit:
     url: 'https://visit.museum.wa.gov.au'
+injectcss:
+  simpleKeyboard:
+    path: 'node_modules/simple-keyboard/build/css/index.css'
 injectscripts:
-  hidecursor:
-    script: 'hide-cursor.js'
+  jquery:
+    name: '$'
+    path: 'node_modules/jquery/dist/jquery.min.js'
+  simpleKeyboard:
+    name: simpleKeyboard
+    path: 'node_modules/simple-keyboard/build/index.js'
+  simpleKeyboardLayouts:
+    name: simpleKeyboardLayouts
+    path: 'node_modules/simple-keyboard-layouts/build/index.js'
+  keyboard:
+    path: 'inject-scripts/keyboard.js'
 windows:
   default:
     display: 0
@@ -39,3 +51,6 @@ windows:
     x: 50
     y: 50
     node: true
+    injectscripts:
+      usejquery:
+        path: 'inject-scripts/usejquery.js'

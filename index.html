@@ -11,6 +11,9 @@
 <a id="crash" href="javascript:process.crash()">Crash this process</a><br />
 <a id="destroy" href="javascript:destroy()">Destroy this process</a>
 <div id="test"></div>
+<input class="input" id="test2"/>
+<div class="simple-keyboard"></div>
+<iframe src="./iframe.html" width="200" height="200"></iframe>
 <script>
   function destroy() {
     console.error('error');
@@ -21,12 +24,20 @@
       elem.innerHTML=data + img;
     }
   };
-  window.addEventListener('DOMContentLoaded', () => {
-    console.log(window.whistlePunk.send('hi'));
+  // window.addEventListener('DOMContentLoaded', () => {
+  //   console.log(window.whistlePunk.send('hi'));
+  // });
+  // window.whistlePunk.handleMessage((event, value) => {
+  //   console.log(value);
+  // })
+
+</script>
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script>
+  $(function() {
+    console.log('version',$.fn.jquery);
+    // $('#test2').remove();
   });
-  window.whistlePunk.handleMessage((event, value) => {
-    console.log(value);
-  })
 </script>
 </body>
 
