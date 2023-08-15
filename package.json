@@ -1,10 +1,10 @@
 {
   "name": "whistle-punk",
-  "version": "3.3.0",
+  "version": "4.0.0",
   "description": "OAK launcher that handles and logs errors.",
   "main": "index.js",
   "scripts": {
-    "start": "node_modules/.bin/electron ./index.js",
+    "start": "bin/entrypoint ./config/default-dist.yml",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
@@ -17,14 +17,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron": "^23.0.0",
+    "electron": "^25.0.0",
+    "jquery": "^3.7.0",
     "js-yaml": "^3.14.1",
     "lodash.defaults": "^4.2.0",
     "lodash.defaultsdeep": "^4.6.1",
+    "lodash.find": "^4.6.0",
+    "lodash.foreach": "^4.5.0",
     "lodash.has": "^4.5.2",
     "lodash.merge": "^4.6.2",
     "lodash.union": "^4.6.0",
     "minimatch": "^9.0.0",
+    "simple-keyboard": "^3.5.62",
+    "simple-keyboard-layouts": "^3.1.325",
     "wait-on": "^7.0.1",
     "yargs": "^17.7.1"
   }
