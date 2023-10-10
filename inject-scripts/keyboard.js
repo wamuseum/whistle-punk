@@ -2,7 +2,7 @@ $(function() {
   if ($('#test2').length) {
     let Keyboard = simpleKeyboard.default;
     const KeyboardLayouts = simpleKeyboardLayouts.default;
-    const layout = new KeyboardLayouts().get("japanese");
+    const layout = new KeyboardLayouts()//.get("japanese");
     let keyboard = new Keyboard({
       onChange: input => onChange(input),
       onKeyPress: button => onKeyPress(button),

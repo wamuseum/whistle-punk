@@ -7,9 +7,10 @@
 <body>
 <h1>Test</h1>
 <!-- example code from https://github.com/electron/electron-api-demos/blob/master/renderer-process/windows/process-hang.js -->
-<a id="hang" href="javascript:process.hang()">Hang this process</a><br />
-<a id="crash" href="javascript:process.crash()">Crash this process</a><br />
-<a id="destroy" href="javascript:destroy()">Destroy this process</a>
+<!--@TODO: update the following  to work with new electron versions-->
+<!--<a id="hang" href="javascript:process.hang()">Hang this process</a><br />-->
+<!--<a id="crash" href="javascript:process.crash()">Crash this process</a><br />-->
+<a id="destroy" href="javascript:destroy()">Destroy this process</a> to test Whistle Punk recovery
 <div id="test"></div>
 <input class="input" id="test2"/>
 <div class="simple-keyboard"></div>
@@ -24,19 +25,13 @@
       elem.innerHTML=data + img;
     }
   };
-  // window.addEventListener('DOMContentLoaded', () => {
-  //   console.log(window.whistlePunk.send('hi'));
-  // });
-  // window.whistlePunk.handleMessage((event, value) => {
-  //   console.log(value);
-  // })
+//   @TODO: redo example for sending and receiving messages to Whistle Punk
 
 </script>
 <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
 <script>
   $(function() {
-    console.log('version',$.fn.jquery);
-    // $('#test2').remove();
+    console.log('main window (index.html) has jquery version',$.fn.jquery);
   });
 </script>
 </body>
